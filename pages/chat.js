@@ -1,27 +1,63 @@
 import { Box, Text, TextField, Image, Button } from '@skynexui/components';
 import React from 'react';
 import appConfig from './config.json';
+import { createClient } from '@supabase/supabase-js'
 
+//https://medium.com/@omariosouto/entendendo-como-fazer-ajax-com-a-fetchapi-977ff20da3c6
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYW5vbiIsImlhdCI6MTY0MzMxMzAyNywiZXhwIjoxOTU4ODg5MDI3fQ.7u-qjHv-lofAbDe-MrxX9Ytf8Vyy4V7IqLO1Up4-f4Y';
+const SUPABASE_URL = 'https://jtfmqwpjfzgqrggqlmxt.supabase.co';
+const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+ 
+   
 export default function ChatPage() {
     const [mensagem, setMensagem] = React.useState('');
     const [listaDeMensagens, setListaDeMensagens] = React.useState([]);
 
-    // Sua lógica vai aqui
+    React.useEffect(() => {
+        supabaseClient
+            .from('mensagens')
+            .select('*')
+            .order('id', { ascending: false })
+            .then(({ data }) => {
+                console.log('Dados da consulta', data);
+                setListaDeMensagens(data);
+             });
+    }, []);
+    
+      /*
+        Usuário
+        - Usuário digita no campo textarea
+        - Aperta entrar para enviar
+        - Tem que adicionar o texto na publicação
+    
+        Dev
+       - [X] Campo criado
+       - [X] Vamos usar o onChange usa o useState (ter se pra caso seja entrar pra limpar a variavel)
+       - [X] Lista de mensagens 
+     */
 
-    // ./Sua lógica vai aqui
-
-    //Isolando uma função
     function handleNovaMensagem(novaMensagem) {
         const mensagem = {
-            id: listaDeMensagens.length + 1,
+            //id: listaDeMensagens.length + 1,
             de: 'Marceloeletron',
             texto: novaMensagem,
         };
-        
-        setListaDeMensagens([
-            mensagem,
-            ...listaDeMensagens,
-        ]);
+
+        supabaseClient
+            .from('mensagens')
+            .insert([
+                //Tem que ser um objeto com os mesmos campos que no supabase
+                mensagem
+            ])
+            .then(({ data }) => {
+                console.log('Criando mensagem:', data);
+                setListaDeMensagens([
+                     data[0],
+                     ...listaDeMensagens,
+                ]);
+            });
+                
         setMensagem('');
     }
 
@@ -174,7 +210,7 @@ function MensagemList(props) {
                             display: 'inline-block',
                             marginRight: '8px',
                         }}
-                        src={`https://github.com/Marceloeletron.png`}
+                        src={`https://github.com/${mensagem.de}.png`}
                     />
                     <Text tag="strong">
                     {mensagem.de}
