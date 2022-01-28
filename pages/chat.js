@@ -27,14 +27,14 @@ export default function ChatPage() {
     
       /*
         Usuário
-        - Usuário digita no campo textarea
-        - Aperta entrar para enviar
-        - Tem que adicionar o texto na publicação
+         - Usuário digita no campo textarea
+         - Aperta entrar para enviar
+         - Tem que adicionar o texto na publicação
     
         Dev
-       - [X] Campo criado
-       - [X] Vamos usar o onChange usa o useState (ter se pra caso seja entrar pra limpar a variavel)
-       - [X] Lista de mensagens 
+         - [X] Campo criado
+         - [X] Vamos usar o onChange usa o useState (ter se pra caso seja entrar pra limpar a variavel)
+         - [X] Lista de mensagens 
      */
 
     function handleNovaMensagem(novaMensagem) {
